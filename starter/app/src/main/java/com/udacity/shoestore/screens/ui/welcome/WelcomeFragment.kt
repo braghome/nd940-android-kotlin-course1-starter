@@ -16,24 +16,27 @@ import com.udacity.shoestore.screens.ui.welcome.WelcomeFragmentDirections.Compan
 class WelcomeFragment : Fragment() {
 
     private lateinit var viewModel: WelcomeViewModel
+    private lateinit var binding: WelcomeFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val bind = DataBindingUtil.inflate<WelcomeFragmentBinding>(inflater, R.layout.welcome_fragment,
+        binding = DataBindingUtil.inflate<WelcomeFragmentBinding>(inflater, R.layout.welcome_fragment,
                 container, false)
-        this.also { bind.lifecycleOwner = it }
+        return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(WelcomeViewModel::class.java)
-        bind.welcomeViewModel = viewModel
+        this.also { binding.lifecycleOwner = it }
+        binding.welcomeViewModel = viewModel
         viewModel.hasSelectedInstructions.observe(viewLifecycleOwner, { instructions ->
             if (instructions) {
                 findNavController().navigate(actionWelcomeFragmentToInstructionsFragment())
                 viewModel.onInstructionsComplete()
             }
         })
-
-        return bind.root
     }
-
 }
