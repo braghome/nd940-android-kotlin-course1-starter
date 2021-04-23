@@ -15,10 +15,6 @@ import com.udacity.shoestore.screens.ui.instructions.InstructionsFragmentDirecti
 
 class InstructionsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = InstructionsFragment()
-    }
-
     private lateinit var viewModel: InstructionsViewModel
     private lateinit var binding: InstructionsFragmentBinding
 
@@ -36,7 +32,7 @@ class InstructionsFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(InstructionsViewModel::class.java)
         this.also { binding.lifecycleOwner = it }
         binding.instructionVewModel = viewModel
-        viewModel.hasSelectedList.observe(viewLifecycleOwner, Observer { hasClickedInstructions ->
+        viewModel.hasSelectedList.observe(viewLifecycleOwner, { hasClickedInstructions ->
             if (hasClickedInstructions) {
                 findNavController().navigate(actionInstructionsFragmentToScrollingFragment())
                 viewModel.hasCompletedList()

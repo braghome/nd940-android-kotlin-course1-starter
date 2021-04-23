@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="scrollingViewModel"
+            type="com.udacity.shoestore.screens.ui.shoelist.ScrollingFragmentViewModel" />
+    </data>
 
     <ScrollView
         android:id="@+id/list"
-        android:name="com.udacity.shoestore.screens.ui.shoelist.ItemFragment"
+        tools:context="com.udacity.shoestore.screens.ui.shoelist.ScrollingFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
@@ -24,6 +28,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:contentDescription="@string/add_shoe_details"
+                android:onClick="@{() ->scrollingViewModel.onSelectedItemDetail()}"
                 app:srcCompat="@drawable/ic_add" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>
