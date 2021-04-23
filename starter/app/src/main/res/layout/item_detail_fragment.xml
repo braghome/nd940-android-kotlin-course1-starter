@@ -2,6 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+        <data>
+            <variable
+                name="itemDetailViewModel"
+                type="com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailViewModel"
+                />
+        </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -36,6 +42,12 @@
             android:hint="@string/shoe_name"
             android:inputType="textPersonName"
             android:textAlignment="center"
+            android:text="@={itemDetailViewModel.shoeName}"
+            app:errorEnabled="true"
+            app:hintEnabled="false"
+            app:error="@{itemDetailViewModel.userNameError}"
+            app:counterEnabled="true"
+            app:counterMaxLength="20"
             app:layout_constraintBottom_toTopOf="@id/shoeCompany"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,19 +60,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:autofillHints="@string/company"
+            android:selectAllOnFocus="true"
+            android:imeActionLabel="@string/company"
             android:ems="10"
             android:hint="@string/company"
             android:inputType="text"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textAlignment="center"
+            android:text="@={itemDetailViewModel.shoeCompany}"
+            app:errorEnabled="true"
+            app:hintEnabled="false"
+            app:error="@{itemDetailViewModel.userNameError}"
+            app:counterEnabled="true"
+            app:counterMaxLength="20"
             app:layout_constraintBottom_toTopOf="@id/shoeSize"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/shoeName"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <EditText
@@ -68,33 +89,47 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:autofillHints="@string/shoe_size"
+            android:selectAllOnFocus="true"
             android:ems="10"
             android:hint="@string/shoe_size"
             android:inputType="number"
             android:textAlignment="center"
+            android:lines="1"
+            android:text="@={`` + itemDetailViewModel.shoeSize}"
             app:layout_constraintBottom_toTopOf="@id/shoeDescription"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/shoeCompany"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintVertical_chainStyle="packed" />
+
         <EditText
             android:id="@+id/shoeDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:autofillHints="@string/shoe_details"
+            android:selectAllOnFocus="true"
+            android:imeActionLabel="@string/save"
+            android:imeOptions="actionDone"
             android:ems="10"
             android:hint="@string/shoe_details"
             android:inputType="textMultiLine"
             android:textAlignment="center"
+            app:errorEnabled="true"
+            app:hintEnabled="false"
+            app:error="@{itemDetailViewModel.userNameError}"
+            app:counterEnabled="true"
+            app:counterMaxLength="200"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/shoeSize"
-            app:layout_constraintBottom_toTopOf="@+id/guideline" />
+            app:layout_constraintTop_toBottomOf="@id/shoeSize" />
 
         <Button
             android:id="@+id/cancel"

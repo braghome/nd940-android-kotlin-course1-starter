@@ -12,19 +12,22 @@ import com.udacity.shoestore.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         val binding = ActivityMainBinding.inflate(layoutInflater)
-        val navController = findNavController(R.id.nav_host_fragment)
-        setupWithNavController(binding.navigationView, navController)
-        appBarConfiguration = AppBarConfiguration(navController.graph, binding.drawerLayout)
+        binding.apply {
+            setContentView(root)
+            setSupportActionBar(toolbar)
+            navController = findNavController(R.id.nav_host_fragment)
+            setupWithNavController(navigationView, navController)
+            appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
+        }
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
         return navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

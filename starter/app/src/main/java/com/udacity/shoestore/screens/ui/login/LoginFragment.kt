@@ -1,5 +1,7 @@
 package com.udacity.shoestore.screens.ui.login
 
+import android.content.Context
+import android.content.Context.*
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,22 +9,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.udacity.shoestore.R
 import com.udacity.shoestore.databinding.FragmentLoginBinding
+import com.udacity.shoestore.screens.ui.login.LoginFragmentDirections.Companion.actionLoginFragmentToWelcomeFragment
 
 class LoginFragment : Fragment() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: FragmentLoginBinding
+    private val closeKeyboard: (TextView?, LoginViewModel, FragmentLoginBinding) -> Unit ={
+        textView, loginViewModel, binding ->
+            loginViewModel.login(
+                    binding.username.text.toString(),
+                    binding.password.text.toString()
+            )
+            textView?.let {
+                val imm = it.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(it.windowToken, 0)
+            }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,30 +98,25 @@ class LoginFragment : Fragment() {
         }
         binding.username.addTextChangedListener(afterTextChangedListener)
         binding.password.addTextChangedListener(afterTextChangedListener)
-        binding.password.setOnEditorActionListener { _, actionId, _ ->
+        binding.password.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(
-                    binding.username.text.toString(),
-                    binding.password.text.toString()
-                )
+                closeKeyboard(textView, loginViewModel, binding)
             }
             false
         }
 
         binding.login.setOnClickListener {
             binding.loading.visibility = View.VISIBLE
-            loginViewModel.login(
-                binding.username.text.toString(),
-                binding.password.text.toString()
-            )
+            closeKeyboard(it as TextView, loginViewModel, binding)
         }
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome) + model.displayName
+        val welcome = "${getString(R.string.welcome)} ${model.displayName}"
         // TODO : initiate successful logged in experience
         val appContext = context?.applicationContext ?: return
         Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
+        findNavController().navigate(actionLoginFragmentToWelcomeFragment())
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {

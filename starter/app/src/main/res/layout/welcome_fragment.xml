@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <data>
+            <variable
+                name="welcomeViewModel"
+                type="com.udacity.shoestore.screens.ui.welcome.WelcomeViewModel"
+                />
+        </data>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/welcome_layout"
     android:layout_width="match_parent"
@@ -46,9 +53,13 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/get_instructions"
+        android:onClick="@{() ->welcomeViewModel.onSelectInstructions()}"
+        style="@style/whiteBox"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description_msg" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

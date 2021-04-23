@@ -5,14 +5,18 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome!"</string>
+    <string name="welcome">"Welcome To The Shoe Store!"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="shoe_description">"Twenty years ago, we began as a small online retailer that only sold shoes. We aim to inspire the world by showing it's possible to simultaneously deliver happiness to customers, employees, vendors, shareholders, and the community in a long-term, sustainable way. \n\nWe hope that in the future people won't even realize we started selling shoes online."</string>
     <string name="get_instructions">Get Instructions</string>
     <string name="oxfords">Oxfords</string>
-    <string name="oxford_text">An Oxford shoe is characterized by shoelace eyelets tabs that are attached under the vamp,[1] a feature termed \"closed lacing\".[2] This contrasts with Derbys, or bluchers, which have shoelace eyelets attached to the top of the vamp.[3] Originally, Oxfords were plain, formal shoes, made of leather, but they evolved into a range of styles suitable for formal, uniform, or casual wear. On the basis of function and the dictates of fashion, Oxfords are now made from a variety of materials, including calf leather, faux and genuine patent leather, suede, and canvas. They are normally black or brown, and may be plain or patterned (brogue).</string>
+    <string name="oxford_text">"An Oxford shoe is characterized by shoelace eyelets tabs that are attached under the vamp,\n\n"
+        "[1] a feature termed \"closed lacing\".\n"
+        "[2] This contrasts with Derbys, or bluchers, which have shoelace eyelets attached to the top of the vamp.\n"
+        "[3] Originally, Oxfords were plain, formal shoes, made of leather, but they evolved into a range of styles suitable for formal, uniform, or casual wear.\n"
+        "On the basis of function and the dictates of fashion, Oxfords are now made from a variety of materials, including calf leather, faux and genuine patent leather, suede, and canvas. They are normally black or brown, and may be plain or patterned (brogue)."</string>
     <string name="shoe_list">Shoes List</string>
     <string name="add_shoe_details">Add shoe details to the list</string>
     <string name="shoe_name">Shoe Name</string>
