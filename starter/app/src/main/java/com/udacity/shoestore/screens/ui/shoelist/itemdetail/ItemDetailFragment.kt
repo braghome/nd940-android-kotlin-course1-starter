@@ -25,9 +25,14 @@ class ItemDetailFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.item_detail_fragment, container,
             false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         this.also { binding.lifecycleOwner = it }
         viewModel = ViewModelProvider(this).get(ItemDetailViewModel::class.java)
-        binding.itemDetailViewModel = viewModel
+        viewModel.also { binding.itemDetailViewModel = it }
         binding.save.isEnabled = viewModel.onShowList()
 
         viewModel.showItemList.observe(viewLifecycleOwner, { fieldsPresent ->
@@ -40,7 +45,5 @@ class ItemDetailFragment : Fragment() {
                 viewModel.onItemDetailComplete()
             }
         })
-        return binding.root
     }
-
 }

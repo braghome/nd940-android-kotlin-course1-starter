@@ -25,11 +25,11 @@ class ScrollingFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ScrollingFragmentViewModel::class.java)
         this.also { binding.lifecycleOwner = it }
-        binding.scrollingViewModel = viewModel
+        viewModel.also { binding.scrollingViewModel = it }
         viewModel.hasSelectedItemDetail.observe(viewLifecycleOwner, { isItemDetail ->
             if (isItemDetail) {
                 findNavController().navigate(actionScrollingFragmentToItemDetailFragment())
