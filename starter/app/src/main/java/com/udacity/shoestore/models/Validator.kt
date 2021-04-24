@@ -11,10 +11,8 @@ class Validator {
         private const val SHOE_SIZE_MSG = "The shoe size can't be less than one or greater than 37"
         private const val DESCRIPTION_MSG = "The shoe description can't be empty"
         private const val ALL_PASS = "All fields valid"
-        private val charList = listOf(
-                ',', '?', '.', '\'', ',', ';', '\"', '$', ':', '-'
-        )
-        val isValidCharacters: (Char) -> Boolean = { c -> charList.contains(toLowerCase(c)) }
+        private val charList = listOf(',', '?', '.', '\'', ',', ';', '\"', '$', ':', '-')
+        val isValidCharacters: (Char) -> Boolean = { c -> charList.contains(c) }
         val hasAlphaNumericUnderscore: (String) -> Boolean = { s: String ->
             val allValid = s.all { ch -> valueOf(ch).isLetterOrDigit() || valueOf(ch).isWhitespace() ||
                     valueOf(ch) == '_'
