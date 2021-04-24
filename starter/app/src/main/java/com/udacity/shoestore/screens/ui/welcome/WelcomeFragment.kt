@@ -27,9 +27,12 @@ class WelcomeFragment : Fragment() {
         return binding.root
     }
 
+    /*
+     * Assignment on line 35, 36 and 37, is written in form of kotlin expression
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(WelcomeViewModel::class.java)
+        ViewModelProvider(this).get(WelcomeViewModel::class.java).also { viewModel = it }
         this.also { binding.lifecycleOwner = it }
         viewModel.also { binding.welcomeViewModel = it }
         viewModel.hasSelectedInstructions.observe(viewLifecycleOwner, { instructions ->

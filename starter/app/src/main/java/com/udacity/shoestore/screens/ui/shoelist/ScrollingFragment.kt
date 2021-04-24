@@ -26,9 +26,13 @@ class ScrollingFragment : Fragment() {
         return binding.root
     }
 
+    /*
+     * Assignment on line 34, 36 and 37, is written in form of kotlin expression
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ScrollingFragmentViewModel::class.java)
+        ViewModelProvider(this).get(ScrollingFragmentViewModel::class.java).also {
+            viewModel = it }
         this.also { binding.lifecycleOwner = it }
         viewModel.also { binding.scrollingViewModel = it }
         viewModel.hasSelectedItemDetail.observe(viewLifecycleOwner, { isItemDetail ->

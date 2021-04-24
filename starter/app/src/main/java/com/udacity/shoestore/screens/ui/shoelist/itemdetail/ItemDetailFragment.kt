@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.udacity.shoestore.R
 import com.udacity.shoestore.databinding.ItemDetailFragmentBinding
+import com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailFragmentDirections.Companion.actionItemDetailFragmentToScrollingFragment
 
 /**
  * A fragment representing a list of Items.
@@ -28,20 +29,21 @@ class ItemDetailFragment : Fragment() {
         return binding.root
     }
 
+    /*
+     * Assignment on line 37, 38, 39, 40 and 43, is written in form of kotlin expression
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewModelProvider(this).get(ItemDetailViewModel::class.java).also { viewModel = it }
         this.also { binding.lifecycleOwner = it }
-        viewModel = ViewModelProvider(this).get(ItemDetailViewModel::class.java)
         viewModel.also { binding.itemDetailViewModel = it }
         viewModel.onShowList().also { binding.save.isEnabled = it }
 
         viewModel.showItemList.observe(viewLifecycleOwner, { fieldsPresent ->
-            binding.save.isEnabled = viewModel.onShowList()
+            viewModel.onShowList().also { binding.save.isEnabled = it }
             if (fieldsPresent) {
                 viewModel.onSave()
-                val action = ItemDetailFragmentDirections.
-                                                actionItemDetailFragmentToScrollingFragment()
-                findNavController().navigate(action)
+                findNavController().navigate(actionItemDetailFragmentToScrollingFragment())
                 viewModel.onItemDetailComplete()
             }
         })

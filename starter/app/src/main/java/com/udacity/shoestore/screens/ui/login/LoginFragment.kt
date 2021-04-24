@@ -50,8 +50,8 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
+        ViewModelProvider(this, LoginViewModelFactory())
+                .get(LoginViewModel::class.java).also { loginViewModel = it }
 
 
         loginViewModel.loginFormState.observe(viewLifecycleOwner,
@@ -59,7 +59,7 @@ class LoginFragment : Fragment() {
                 if (loginFormState == null) {
                     return@Observer
                 }
-                binding.login.isEnabled = loginFormState.isDataValid
+                loginFormState.isDataValid.also { binding.login.isEnabled = it }
                 loginFormState.usernameError?.let {
                     binding.username.error = getString(it)
                 }
@@ -71,7 +71,7 @@ class LoginFragment : Fragment() {
         loginViewModel.loginResult.observe(viewLifecycleOwner,
             Observer { loginResult ->
                 loginResult ?: return@Observer
-                binding.loading.visibility = View.GONE
+                View.GONE.also { binding.loading.visibility = it }
                 loginResult.error?.let {
                     showLoginFailed(it)
                 }

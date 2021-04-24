@@ -29,7 +29,7 @@ class InstructionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(InstructionsViewModel::class.java)
+        ViewModelProvider(this).get(InstructionsViewModel::class.java).also { viewModel = it }
         this.also { binding.lifecycleOwner = it }
         viewModel.also { binding.instructionVewModel = it }
         viewModel.hasSelectedList.observe(viewLifecycleOwner, { hasClickedInstructions ->
