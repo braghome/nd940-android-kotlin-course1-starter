@@ -33,7 +33,7 @@ class ItemDetailFragment : Fragment() {
         this.also { binding.lifecycleOwner = it }
         viewModel = ViewModelProvider(this).get(ItemDetailViewModel::class.java)
         viewModel.also { binding.itemDetailViewModel = it }
-        binding.save.isEnabled = viewModel.onShowList()
+        viewModel.onShowList().also { binding.save.isEnabled = it }
 
         viewModel.showItemList.observe(viewLifecycleOwner, { fieldsPresent ->
             binding.save.isEnabled = viewModel.onShowList()

@@ -21,7 +21,8 @@ class ScrollingFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate<ScrollingFragmentBinding>(inflater, R.layout.scrolling_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.scrolling_fragment, container,
+                false)
         return binding.root
     }
 

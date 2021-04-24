@@ -22,8 +22,8 @@ class InstructionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate<InstructionsFragmentBinding>(inflater, R.layout.instructions_fragment,
-                container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.instructions_fragment, container,
+                false)
         return binding.root
     }
 
@@ -31,7 +31,7 @@ class InstructionsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(InstructionsViewModel::class.java)
         this.also { binding.lifecycleOwner = it }
-        binding.instructionVewModel = viewModel
+        viewModel.also { binding.instructionVewModel = it }
         viewModel.hasSelectedList.observe(viewLifecycleOwner, { hasClickedInstructions ->
             if (hasClickedInstructions) {
                 findNavController().navigate(actionInstructionsFragmentToScrollingFragment())

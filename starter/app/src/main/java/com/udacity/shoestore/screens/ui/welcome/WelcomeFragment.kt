@@ -22,8 +22,8 @@ class WelcomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate<WelcomeFragmentBinding>(inflater, R.layout.welcome_fragment,
-                container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.welcome_fragment, container,
+                false)
         return binding.root
     }
 
@@ -31,7 +31,7 @@ class WelcomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(WelcomeViewModel::class.java)
         this.also { binding.lifecycleOwner = it }
-        binding.welcomeViewModel = viewModel
+        viewModel.also { binding.welcomeViewModel = it }
         viewModel.hasSelectedInstructions.observe(viewLifecycleOwner, { instructions ->
             if (instructions) {
                 findNavController().navigate(actionWelcomeFragmentToInstructionsFragment())

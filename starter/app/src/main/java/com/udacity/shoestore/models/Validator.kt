@@ -5,19 +5,19 @@ import java.lang.Character.valueOf
 
 class Validator {
     companion object {
-        const val SHOE_DETAILS_ERROR = "Must contain only letters numbers and underscores"
+        const val SHOE_DETAILS_ERROR = "Must contain only letters numbers, underscores, or white space"
         private const val SHOE_NAME_MSG = "The shoe name is empty"
         private const val COMPANY_MSG = "The company name empty"
         private const val SHOE_SIZE_MSG = "The shoe size can't be less than one or greater than 37"
         private const val DESCRIPTION_MSG = "The shoe description can't be empty"
         private const val ALL_PASS = "All fields valid"
-        val charList = listOf<Char>(
+        private val charList = listOf(
                 ',', '?', '.', '\'', ',', ';', '\"', '$', ':', '-'
         )
         val isValidCharacters: (Char) -> Boolean = { c -> charList.contains(toLowerCase(c)) }
         val hasAlphaNumericUnderscore: (String) -> Boolean = { s: String ->
-            val allValid = s.all { ch -> valueOf(ch).isLetterOrDigit() && valueOf(ch).isWhitespace() ||
-                    valueOf(ch).isLetterOrDigit() && valueOf(ch) == '_'
+            val allValid = s.all { ch -> valueOf(ch).isLetterOrDigit() || valueOf(ch).isWhitespace() ||
+                    valueOf(ch) == '_'
             }
             allValid
         }

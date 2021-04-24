@@ -113,6 +113,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
+            android:text="@={itemDetailViewModel.description}"
             android:autofillHints="@string/shoe_details"
             android:selectAllOnFocus="true"
             android:imeActionLabel="@string/save"
@@ -163,6 +164,4 @@
             app:layout_constraintGuide_end="96dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </layout>
