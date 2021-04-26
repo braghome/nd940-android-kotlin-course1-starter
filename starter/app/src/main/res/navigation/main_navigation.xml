@@ -45,6 +45,7 @@
         android:label="ItemDetailFragment" >
         <action
             android:id="@+id/action_itemDetailFragment_to_scrollingFragment"
-            app:destination="@id/scrollingFragment" />
+            app:destination="@id/scrollingFragment"
+            app:popUpTo="@id/scrollingFragment" />
     </fragment>
 </navigation>

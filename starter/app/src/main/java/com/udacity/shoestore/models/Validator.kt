@@ -10,7 +10,7 @@ class Validator {
         private const val COMPANY_MSG = "The company name empty"
         private const val SHOE_SIZE_MSG = "The shoe size can't be less than one or greater than 37"
         private const val DESCRIPTION_MSG = "The shoe description can't be empty"
-        private const val ALL_PASS = "All fields valid"
+        const val ALL_PASS = ""
         private val charList = listOf(',', '?', '.', '\'', ',', ';', '\"', '$', ':', '-')
         val isValidCharacters: (Char) -> Boolean = { c -> charList.contains(c) }
         val hasAlphaNumericUnderscore: (String) -> Boolean = { s: String ->
@@ -47,9 +47,9 @@ class Validator {
             class CheckDescription(val shoe: Shoe) : ShoeError()
         }
 
-        val isNameError: (Shoe) -> Boolean = { it -> it.name.isNotBlank() || it.name.isBlank() }
+        val isNameError: (Shoe) -> Boolean = { it -> it.name.isBlank() || it.name.isEmpty() }
         val isSizeError: (Shoe) -> Boolean = { it -> it.size < 1 || it.size > 37 }
-        val isCompanyError: (Shoe) -> Boolean = { it -> it.company.isNotBlank() || it.company.isEmpty() }
+        val isCompanyError: (Shoe) -> Boolean = { it -> it.company.isEmpty() || it.company.isBlank() }
         val isDescriptionError: (Shoe) -> Boolean = { it ->
             it.description.isEmpty() || it.description.isBlank()
         }
@@ -58,23 +58,35 @@ class Validator {
                 isDescriptionError
         )
 
-        private fun execute(shoe: Shoe, se: ShoeError) = when (se) {
+        fun execute(shoe: Shoe, se: ShoeError) = when (se) {
             is ShoeError.CheckName -> if (isNameError(shoe)) {
                 ShoeValidation.SHOE_NAME_EMPTY.msg.also { shoe.nameError = it }
                 ShoeValidation.SHOE_NAME_EMPTY
-            } else ShoeValidation.NO_ERRORS
+            } else {
+                ALL_PASS.also { shoe.nameError = it }
+                ShoeValidation.NO_ERRORS
+            }
             is ShoeError.CheckSize -> if (isSizeError(shoe)) {
                 ShoeValidation.SHOE_SIZE_INVALID.msg.also { shoe.sizeError = it }
                 ShoeValidation.SHOE_SIZE_INVALID
-            } else ShoeValidation.NO_ERRORS
+            } else {
+                ALL_PASS.also { shoe.sizeError = it }
+                ShoeValidation.NO_ERRORS
+            }
             is ShoeError.CheckCompany -> if (isCompanyError(shoe)) {
                 ShoeValidation.COMPANY_NAME_EMPTY.msg.also { shoe.companyError = it }
                 ShoeValidation.COMPANY_NAME_EMPTY
-            } else ShoeValidation.NO_ERRORS
+            } else {
+                ALL_PASS.also { shoe.companyError = it }
+                ShoeValidation.NO_ERRORS
+            }
             is ShoeError.CheckDescription -> if (isDescriptionError(shoe)) {
                 ShoeValidation.DESCRIPTION_EMPTY.msg.also { shoe.descriptionError = it }
                 ShoeValidation.DESCRIPTION_EMPTY
-            } else ShoeValidation.NO_ERRORS
+            } else {
+                ALL_PASS.also { shoe.descriptionError = it }
+                ShoeValidation.NO_ERRORS
+            }
         }
 
         class ShErr(val shErrOps: List<ShoeError> = emptyList()) {

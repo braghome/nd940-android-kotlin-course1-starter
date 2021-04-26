@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.ViewModel
 import com.udacity.shoestore.models.Shoe
+import com.udacity.shoestore.models.Validator
 import com.udacity.shoestore.models.Validator.Companion.SHOE_DETAILS_ERROR
 import com.udacity.shoestore.models.Validator.Companion.ShErr
 import com.udacity.shoestore.models.Validator.Companion.ShoeError.*
@@ -14,19 +15,21 @@ import com.udacity.shoestore.models.Validator.Companion.runShoe
 import com.udacity.shoestore.models.Validator.Companion.verify
 import com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailViewModel.ShoeState.InValid
 import com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailViewModel.ShoeState.Valid
+import timber.log.Timber
 
 class ItemDetailViewModel : ViewModel() {
     private var _shoe = MutableLiveData<Shoe>()
-    val shoe: LiveData<Shoe>
-        get() = _shoe
 
-    val shoeName = MutableLiveData<String>()
+    var shoeName = MutableLiveData<String>()
 
-    val shoeCompany = MutableLiveData<String>()
+    var shoeCompany = MutableLiveData<String>()
 
     val shoeSize = ObservableInt()
 
     val description = MutableLiveData<String>()
+    private var _cancel = MutableLiveData<Boolean>()
+    val cancel: LiveData<Boolean>
+        get() = _cancel
     private var _showItemList = MutableLiveData<Boolean>()
     val showItemList: LiveData<Boolean>
         get() = _showItemList
@@ -45,27 +48,50 @@ class ItemDetailViewModel : ViewModel() {
     }
     init {
         onItemDetailComplete()
+        onCancelItemComplete()
+        val shoe: Shoe
+        Shoe(shoeName.value ?: "", shoeSize.get(), shoeCompany.value ?: "",
+                description.value ?: "").also { shoe = it }
+        shoe.also { _shoe.value = it }
+    }
+
+    fun onCancelItemComplete() {
+        false.also { _cancel.value = it }
+    }
+
+    fun onCancel() {
+        true.also { _cancel.value = it }
     }
 
     fun onItemDetailComplete() {
         false.also { _showItemList.value = it }
     }
 
-    fun onSave() {
-        val shoe: Shoe
-        Shoe(shoeName.value ?: "", shoeSize.get(), shoeCompany.value ?: "",
-                description.value ?: "").also { shoe = it }
-        val checkErrors: ShErr
-        (ShErr() + CheckName(shoe) + CheckSize(shoe) + CheckCompany(shoe) + CheckDescription(shoe)
-                ).also { checkErrors = it }
-        runShoe(shoe, checkErrors)
-        shoe.also { _shoe.value = it }
+    fun onItemDetail() {
+        val shoe = _shoe.value
+        shoe?.let {
+            it.copy(noError = true).also { _shoe.value = it }
+        }
+    }
+
+    fun onNext(company: String, description: String, name: String, size: String) {
+        _shoe.value?.let { innerShoe ->
+            innerShoe.copy(company = company).also { _shoe.value = it }
+            innerShoe.copy(description = description).also { _shoe.value = it }
+            innerShoe.copy(name = name).also { _shoe.value = it }
+            innerShoe.copy(size = Integer.valueOf(size)).also { _shoe.value = it }
+            val checkErrors: ShErr
+            (ShErr() + CheckName(innerShoe) + CheckSize(innerShoe) + CheckCompany(innerShoe) +
+                    CheckDescription(innerShoe)).also { checkErrors = it }
+            runShoe(innerShoe, checkErrors)
+        }
     }
 
     fun onShowList(): Boolean {
         val shoe = _shoe.value
         if (null != shoe) {
-            _showItemList.value = predicateList.all { it(shoe) }
+            Timber.i("the shoe state is:- $shoe")
+            _showItemList.value = shoe.noError
         }
         return _showItemList.value ?: false
     }
@@ -74,5 +100,4 @@ class ItemDetailViewModel : ViewModel() {
         Valid,
         InValid
     }
-
 }

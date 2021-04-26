@@ -54,9 +54,8 @@ class LoginFragment : Fragment() {
                 .get(LoginViewModel::class.java).also { loginViewModel = it }
 
 
-        loginViewModel.loginFormState.observe(viewLifecycleOwner,
-            Observer { loginFormState ->
-                if (loginFormState == null) {
+        loginViewModel.loginFormState.observe(viewLifecycleOwner, Observer { loginFormState ->
+                if (null == loginFormState) {
                     return@Observer
                 }
                 loginFormState.isDataValid.also { binding.login.isEnabled = it }
@@ -68,8 +67,7 @@ class LoginFragment : Fragment() {
                 }
             })
 
-        loginViewModel.loginResult.observe(viewLifecycleOwner,
-            Observer { loginResult ->
+        loginViewModel.loginResult.observe(viewLifecycleOwner, Observer { loginResult ->
                 loginResult ?: return@Observer
                 View.GONE.also { binding.loading.visibility = it }
                 loginResult.error?.let {
