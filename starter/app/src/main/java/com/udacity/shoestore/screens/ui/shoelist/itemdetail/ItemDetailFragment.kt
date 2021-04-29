@@ -12,11 +12,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil.inflate
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.udacity.shoestore.ListShoesViewModel
 import com.udacity.shoestore.R
 import com.udacity.shoestore.databinding.ItemDetailFragmentBinding
 import com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailFragmentDirections.Companion.actionItemDetailFragmentToScrollingFragment
+import timber.log.Timber
 
 /**
  * A fragment representing a list of Items.
@@ -24,6 +27,7 @@ import com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailFragmentDi
 class ItemDetailFragment : Fragment() {
     private lateinit var binding: ItemDetailFragmentBinding
     private lateinit var viewModel: ItemDetailViewModel
+    private val sharedViewModel: ListShoesViewModel by activityViewModels()
     private val afterTextChangeListener = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
         }
@@ -76,6 +80,8 @@ class ItemDetailFragment : Fragment() {
 
         viewModel.showItemList.observe(viewLifecycleOwner, { enabled ->
             if (enabled) {
+                val shoeWithError = viewModel.shoe.value
+                shoeWithError?.let { sharedViewModel.setShoeList(it) }
                 findNavController().navigate(actionItemDetailFragmentToScrollingFragment())
                 viewModel.onShoeItemListComplete()
             }

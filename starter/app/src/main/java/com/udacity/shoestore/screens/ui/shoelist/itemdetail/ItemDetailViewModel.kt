@@ -17,6 +17,8 @@ import timber.log.Timber
 
 class ItemDetailViewModel : ViewModel() {
     private var _shoe = MutableLiveData<ShoeWithError>()
+    val shoe: LiveData<ShoeWithError>
+        get() = _shoe
     var shoeName = MutableLiveData<String>()
 
     var shoeCompany = MutableLiveData<String>()
@@ -56,7 +58,7 @@ class ItemDetailViewModel : ViewModel() {
         }
     }
 
-    private fun shoeReset() {
+    fun shoeReset() {
         val shoeWithError: ShoeWithError
         ShoeWithError(shoeName.value ?: "", shoeSize.value ?: 0,
                 shoeCompany.value ?: "", description.value ?: "").also {

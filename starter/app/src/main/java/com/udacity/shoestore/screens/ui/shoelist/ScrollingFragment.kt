@@ -8,8 +8,10 @@ import androidx.annotation.NonNull
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.databinding.DataBindingUtil.inflate
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.udacity.shoestore.ListShoesViewModel
 import com.udacity.shoestore.R
 import com.udacity.shoestore.databinding.ScrollingFragmentBinding
 import com.udacity.shoestore.databinding.ScrollingRowBinding
@@ -20,6 +22,7 @@ import com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailViewModel
 class ScrollingFragment : Fragment() {
     private lateinit var viewModel: ScrollingFragmentViewModel
     private lateinit var binding: ScrollingFragmentBinding
+    private val sharedViewModel: ListShoesViewModel by activityViewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater,
