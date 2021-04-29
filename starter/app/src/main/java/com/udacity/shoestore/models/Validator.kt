@@ -1,6 +1,5 @@
 package com.udacity.shoestore.models
 
-import java.lang.Character.toLowerCase
 import java.lang.Character.valueOf
 
 class Validator {
@@ -41,50 +40,44 @@ class Validator {
         }
 
         sealed class ShoeError {
-            class CheckName(val shoe: Shoe) : ShoeError()
-            class CheckSize(val shoe: Shoe) : ShoeError()
-            class CheckCompany(val shoe: Shoe) : ShoeError()
-            class CheckDescription(val shoe: Shoe) : ShoeError()
+            class CheckName(val shoeWithError: ShoeWithError) : ShoeError()
+            class CheckSize(val shoeWithError: ShoeWithError) : ShoeError()
+            class CheckCompany(val shoeWithError: ShoeWithError) : ShoeError()
+            class CheckDescription(val shoeWithError: ShoeWithError) : ShoeError()
         }
 
-        val isNameError: (Shoe) -> Boolean = { it -> it.name.isBlank() || it.name.isEmpty() }
-        val isSizeError: (Shoe) -> Boolean = { it -> it.size < 1 || it.size > 37 }
-        val isCompanyError: (Shoe) -> Boolean = { it -> it.company.isEmpty() || it.company.isBlank() }
-        val isDescriptionError: (Shoe) -> Boolean = { it ->
-            it.description.isEmpty() || it.description.isBlank()
-        }
-        val predicateList = listOf<(Shoe) -> Boolean>(
-                isNameError, isSizeError, isCompanyError,
-                isDescriptionError
-        )
+        val isNameError: (ShoeWithError) -> Boolean = { it -> it.name.isEmpty() }
+        val isSizeError: (ShoeWithError) -> Boolean = { it -> it.size < 1 || it.size > 37 }
+        val isCompanyError: (ShoeWithError) -> Boolean = { it -> it.company.isEmpty() }
+        val isDescriptionError: (ShoeWithError) -> Boolean = { it -> it.description.isEmpty() }
 
-        fun execute(shoe: Shoe, se: ShoeError) = when (se) {
-            is ShoeError.CheckName -> if (isNameError(shoe)) {
-                ShoeValidation.SHOE_NAME_EMPTY.msg.also { shoe.nameError = it }
+        private fun execute(shoeWithError: ShoeWithError, se: ShoeError) = when (se) {
+            is ShoeError.CheckName -> if (isNameError(shoeWithError)) {
+                ShoeValidation.SHOE_NAME_EMPTY.msg.also { shoeWithError.nameError = it }
                 ShoeValidation.SHOE_NAME_EMPTY
             } else {
-                ALL_PASS.also { shoe.nameError = it }
+                ALL_PASS.also { shoeWithError.nameError = it }
                 ShoeValidation.NO_ERRORS
             }
-            is ShoeError.CheckSize -> if (isSizeError(shoe)) {
-                ShoeValidation.SHOE_SIZE_INVALID.msg.also { shoe.sizeError = it }
+            is ShoeError.CheckSize -> if (isSizeError(shoeWithError)) {
+                ShoeValidation.SHOE_SIZE_INVALID.msg.also { shoeWithError.sizeError = it }
                 ShoeValidation.SHOE_SIZE_INVALID
             } else {
-                ALL_PASS.also { shoe.sizeError = it }
+                ALL_PASS.also { shoeWithError.sizeError = it }
                 ShoeValidation.NO_ERRORS
             }
-            is ShoeError.CheckCompany -> if (isCompanyError(shoe)) {
-                ShoeValidation.COMPANY_NAME_EMPTY.msg.also { shoe.companyError = it }
+            is ShoeError.CheckCompany -> if (isCompanyError(shoeWithError)) {
+                ShoeValidation.COMPANY_NAME_EMPTY.msg.also { shoeWithError.companyError = it }
                 ShoeValidation.COMPANY_NAME_EMPTY
             } else {
-                ALL_PASS.also { shoe.companyError = it }
+                ALL_PASS.also { shoeWithError.companyError = it }
                 ShoeValidation.NO_ERRORS
             }
-            is ShoeError.CheckDescription -> if (isDescriptionError(shoe)) {
-                ShoeValidation.DESCRIPTION_EMPTY.msg.also { shoe.descriptionError = it }
+            is ShoeError.CheckDescription -> if (isDescriptionError(shoeWithError)) {
+                ShoeValidation.DESCRIPTION_EMPTY.msg.also { shoeWithError.descriptionError = it }
                 ShoeValidation.DESCRIPTION_EMPTY
             } else {
-                ALL_PASS.also { shoe.descriptionError = it }
+                ALL_PASS.also { shoeWithError.descriptionError = it }
                 ShoeValidation.NO_ERRORS
             }
         }
@@ -93,8 +86,8 @@ class Validator {
             operator fun plus(shoeError: ShoeError) = ShErr(shErrOps + shoeError)
         }
 
-        fun runShoe(shoe: Shoe, sheErr: ShErr) {
-            sheErr.shErrOps.forEach { execute(shoe, it) }
+        fun runShoe(shoeWithError: ShoeWithError, sheErr: ShErr) {
+            sheErr.shErrOps.forEach { execute(shoeWithError, it) }
         }
     }
 }

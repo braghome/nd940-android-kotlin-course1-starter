@@ -1,6 +1,5 @@
 package com.udacity.shoestore.screens.ui.login
 
-import android.content.Context
 import android.content.Context.*
 import android.os.Bundle
 import android.text.Editable
@@ -13,7 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -43,8 +42,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container,
-            false)
+        binding = inflate(inflater, R.layout.fragment_login, container, false)
         return binding.root
     }
 

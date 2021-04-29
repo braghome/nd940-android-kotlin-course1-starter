@@ -1,6 +1,6 @@
 package com.udacity.shoestore.screens.ui.shoelist.itemdetail
 
-import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,19 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
-import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil.inflate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.udacity.shoestore.R
 import com.udacity.shoestore.databinding.ItemDetailFragmentBinding
-import com.udacity.shoestore.models.Shoe
-import com.udacity.shoestore.models.Validator.Companion.ALL_PASS
 import com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailFragmentDirections.Companion.actionItemDetailFragmentToScrollingFragment
-import java.lang.Integer.valueOf
 
 /**
  * A fragment representing a list of Items.
@@ -28,9 +24,21 @@ import java.lang.Integer.valueOf
 class ItemDetailFragment : Fragment() {
     private lateinit var binding: ItemDetailFragmentBinding
     private lateinit var viewModel: ItemDetailViewModel
+    private val afterTextChangeListener = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            false.also { binding.save.isEnabled = it }
+            execute(binding)
+        }
+    }
     private val closeKeyboard: (TextView?) -> Unit = { textView ->
         textView?.let {
-            val imm = it.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = it.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(it.windowToken, 0)
         }
     }
@@ -39,12 +47,10 @@ class ItemDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.item_detail_fragment, container,
-            false)
+        binding = inflate(inflater, R.layout.item_detail_fragment, container, false)
         ViewModelProvider(this).get(ItemDetailViewModel::class.java).also { viewModel = it }
         this.also { binding.lifecycleOwner = it }
         viewModel.also { binding.itemDetailViewModel = it }
-        viewModel.onShowList().also { binding.save.isEnabled = it }
         return binding.root
     }
 
@@ -53,17 +59,6 @@ class ItemDetailFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val afterTextChangeListener = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                execute(binding)
-            }
-        }
         afterTextChangeListener.let {
             binding.shoeName.addTextChangedListener(it)
             binding.shoeCompany.addTextChangedListener(it)
@@ -73,17 +68,16 @@ class ItemDetailFragment : Fragment() {
 
         binding.shoeDescription.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == IME_ACTION_DONE) {
-                viewModel.onItemDetail()
+                true.also { binding.save.isEnabled = it }
                 closeKeyboard(v)
-                viewModel.onShowList().also { binding.save.isEnabled = it }
             }
             false
         }
 
-        viewModel.showItemList.observe(viewLifecycleOwner, {
-            if (it) {
+        viewModel.showItemList.observe(viewLifecycleOwner, { enabled ->
+            if (enabled) {
                 findNavController().navigate(actionItemDetailFragmentToScrollingFragment())
-                viewModel.onItemDetailComplete()
+                viewModel.onShoeItemListComplete()
             }
         })
         viewModel.cancel.observe(viewLifecycleOwner, {
