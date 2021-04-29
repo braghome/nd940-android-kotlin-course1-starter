@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
+import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.databinding.DataBindingUtil.inflate
 import androidx.fragment.app.Fragment
@@ -14,17 +14,43 @@ import androidx.navigation.fragment.findNavController
 import com.udacity.shoestore.ListShoesViewModel
 import com.udacity.shoestore.R
 import com.udacity.shoestore.databinding.ScrollingFragmentBinding
-import com.udacity.shoestore.databinding.ScrollingRowBinding
-import com.udacity.shoestore.databinding.ScrollingRowBinding.*
+import com.udacity.shoestore.databinding.TextviewRowBinding
+import com.udacity.shoestore.databinding.TextviewRowBinding.inflate
+import com.udacity.shoestore.models.ShoeWithError
+import com.udacity.shoestore.models.Validator.Companion.ShErr
+import com.udacity.shoestore.models.Validator.Companion.ShoeError
 import com.udacity.shoestore.screens.ui.shoelist.ScrollingFragmentDirections.Companion.actionScrollingFragmentToItemDetailFragment
-import com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailViewModel
-import timber.log.Timber
-import java.util.*
 
 class ScrollingFragment : Fragment() {
     private lateinit var viewModel: ScrollingFragmentViewModel
     private lateinit var binding: ScrollingFragmentBinding
     private val sharedViewModel: ListShoesViewModel by activityViewModels()
+    private fun execute(shoe: ShoeWithError, se: ShoeError, list: LinearLayoutCompat) = when (se) {
+        is ShoeError.CheckName -> {
+            addView(list).apply {
+                id = R.id.reservedShoeName
+                text = shoe.name
+            }
+        }
+        is ShoeError.CheckSize -> {
+            addView(list).apply {
+                id = R.id.reservedShoeSize
+                text = shoe.size.toString()
+            }
+        }
+        is ShoeError.CheckCompany -> {
+            addView(list).apply {
+                id = R.id.reservedShoeCompany
+                text = shoe.company
+            }
+        }
+        is ShoeError.CheckDescription -> {
+            addView(list).apply {
+                id = R.id.reservedShoeDescription
+                text = shoe.description
+            }
+        }
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -41,18 +67,16 @@ class ScrollingFragment : Fragment() {
             viewModel = it }
         this.also { binding.lifecycleOwner = it }
         viewModel.also { binding.scrollingViewModel = it }
-        sharedViewModel.shoeList.observe(viewLifecycleOwner, {
-            if (Collections.EMPTY_LIST == it) {
-                Timber.i("no shoe data passed")
-            } else {
-                Timber.i("shoeList status $it")
+        val shoeRows: LinearLayoutCompat
+        binding.shoeRows.also { shoeRows = it }
+        sharedViewModel.shoeList.observe(viewLifecycleOwner, {  shoeList ->
+            for (shoe in shoeList) {
+                val checkErrors: ShErr
+                (ShErr() + ShoeError.CheckName(shoe) + ShoeError.CheckSize(shoe) +
+                        ShoeError.CheckCompany(shoe) + ShoeError.CheckDescription(shoe)).also { checkErrors = it }
+                runShoe(shoe, checkErrors, shoeRows)
             }
         })
-        val shoeList: LinearLayoutCompat
-        binding.shoeList.also { shoeList = it }
-        val rowBinding: ScrollingRowBinding
-        inflate(layoutInflater).also { rowBinding = it }
-        rowBinding.shoeName
 
         viewModel.hasSelectedItemDetail.observe(viewLifecycleOwner, { isItemDetail ->
             if (isItemDetail) {
@@ -60,5 +84,15 @@ class ScrollingFragment : Fragment() {
                 viewModel.selectionItemDetailComplete()
             }
         })
+    }
+
+    private fun addView(shoeRows: LinearLayoutCompat): TextView {
+        val rowBinding: TextviewRowBinding
+        inflate(layoutInflater, shoeRows, true).also { rowBinding = it }
+        return rowBinding.root
+    }
+    private fun runShoe(shoeWithError: ShoeWithError, sheErr: ShErr,
+                        sRows: LinearLayoutCompat) {
+        sheErr.shErrOps.forEach { execute(shoeWithError, it, sRows) }
     }
 }

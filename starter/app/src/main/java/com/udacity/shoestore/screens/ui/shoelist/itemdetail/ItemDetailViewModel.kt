@@ -58,7 +58,7 @@ class ItemDetailViewModel : ViewModel() {
         }
     }
 
-    fun shoeReset() {
+    private fun shoeReset() {
         val shoeWithError: ShoeWithError
         ShoeWithError(shoeName.value ?: "", shoeSize.value ?: 0,
                 shoeCompany.value ?: "", description.value ?: "").also {
@@ -73,6 +73,7 @@ class ItemDetailViewModel : ViewModel() {
         _showItemList.removeSource(shoeCompany)
         _showItemList.removeSource(shoeSize)
         _showItemList.removeSource(description)
+        shoeReset()
     }
 
     fun onCancelItemComplete() {

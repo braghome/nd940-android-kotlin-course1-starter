@@ -16,7 +16,7 @@
         android:layout_marginRight="16dp">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/shoe_list"
+            android:id="@+id/shoe_rows"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

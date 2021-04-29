@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="reservedShoeName" type="id" />
+    <item name="reservedShoeSize" type="id" />
+    <item name="reservedShoeCompany" type="id" />
+    <item name="reservedShoeDescription" type="id" />
+</resources>
