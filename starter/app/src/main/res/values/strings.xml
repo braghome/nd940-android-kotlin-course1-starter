@@ -116,4 +116,9 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="login_window">Login Window</string>
+    <string name="welcome_window">Welcome Window</string>
+    <string name="instructions_window">Instructions Window</string>
+    <string name="scrolling_window">Scrolling Window</string>
+    <string name="item_detail_window">Item Detail Window</string>
 </resources>

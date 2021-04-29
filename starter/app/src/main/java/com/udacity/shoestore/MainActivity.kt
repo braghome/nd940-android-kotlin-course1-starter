@@ -9,6 +9,8 @@ import androidx.navigation.ui.NavigationUI.navigateUp
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.udacity.shoestore.databinding.ActivityMainBinding
+import com.udacity.shoestore.databinding.AppBarBinding
+import com.udacity.shoestore.databinding.ContentMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -17,9 +19,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
+        val toolBinding = AppBarBinding.inflate(layoutInflater, binding.root, true)
+        val mainContent = ContentMainBinding.inflate(layoutInflater, toolBinding.root, true)
         binding.apply {
             setContentView(root)
-            setSupportActionBar(toolbar)
+            setSupportActionBar(toolBinding.toolbar)
             navController = findNavController(R.id.nav_host_fragment)
             setupWithNavController(navigationView, navController)
             appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
