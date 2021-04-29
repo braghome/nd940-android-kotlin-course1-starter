@@ -18,6 +18,8 @@ import com.udacity.shoestore.databinding.ScrollingRowBinding
 import com.udacity.shoestore.databinding.ScrollingRowBinding.*
 import com.udacity.shoestore.screens.ui.shoelist.ScrollingFragmentDirections.Companion.actionScrollingFragmentToItemDetailFragment
 import com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailViewModel
+import timber.log.Timber
+import java.util.*
 
 class ScrollingFragment : Fragment() {
     private lateinit var viewModel: ScrollingFragmentViewModel
@@ -39,6 +41,13 @@ class ScrollingFragment : Fragment() {
             viewModel = it }
         this.also { binding.lifecycleOwner = it }
         viewModel.also { binding.scrollingViewModel = it }
+        sharedViewModel.shoeList.observe(viewLifecycleOwner, {
+            if (Collections.EMPTY_LIST == it) {
+                Timber.i("no shoe data passed")
+            } else {
+                Timber.i("shoeList status $it")
+            }
+        })
         val shoeList: LinearLayoutCompat
         binding.shoeList.also { shoeList = it }
         val rowBinding: ScrollingRowBinding

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
+import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil.inflate
@@ -19,7 +20,6 @@ import com.udacity.shoestore.ListShoesViewModel
 import com.udacity.shoestore.R
 import com.udacity.shoestore.databinding.ItemDetailFragmentBinding
 import com.udacity.shoestore.screens.ui.shoelist.itemdetail.ItemDetailFragmentDirections.Companion.actionItemDetailFragmentToScrollingFragment
-import timber.log.Timber
 
 /**
  * A fragment representing a list of Items.
@@ -36,7 +36,6 @@ class ItemDetailFragment : Fragment() {
         }
 
         override fun afterTextChanged(s: Editable?) {
-            false.also { binding.save.isEnabled = it }
             execute(binding)
         }
     }
@@ -68,6 +67,12 @@ class ItemDetailFragment : Fragment() {
             binding.shoeCompany.addTextChangedListener(it)
             binding.shoeSize.addTextChangedListener(it)
             binding.shoeDescription.addTextChangedListener(it)
+        }
+        binding.shoeName.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == IME_ACTION_NEXT) {
+                false.also { binding.save.isEnabled = it }
+            }
+            false
         }
 
         binding.shoeDescription.setOnEditorActionListener { v, actionId, _ ->

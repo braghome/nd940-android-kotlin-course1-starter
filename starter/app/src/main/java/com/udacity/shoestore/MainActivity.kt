@@ -33,17 +33,6 @@ class MainActivity : AppCompatActivity() {
         ViewModelProvider(this).get(ListShoesViewModel::class.java).also { viewModel = it }
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.shoeList.observe(this, {
-            if (Collections.EMPTY_LIST == it) {
-                Timber.i("no shoe data passed")
-            } else {
-                Timber.i("shoeList status $it")
-            }
-        })
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         return navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
     }
