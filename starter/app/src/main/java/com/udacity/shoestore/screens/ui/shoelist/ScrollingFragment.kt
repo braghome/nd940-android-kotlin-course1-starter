@@ -19,6 +19,7 @@ import com.udacity.shoestore.databinding.TextviewRowBinding.inflate
 import com.udacity.shoestore.models.ShoeWithError
 import com.udacity.shoestore.models.Validator.Companion.ShErr
 import com.udacity.shoestore.models.Validator.Companion.ShoeError
+import com.udacity.shoestore.models.Validator.Companion.ShoeError.*
 import com.udacity.shoestore.screens.ui.shoelist.ScrollingFragmentDirections.Companion.actionScrollingFragmentToItemDetailFragment
 
 class ScrollingFragment : Fragment() {
@@ -26,25 +27,25 @@ class ScrollingFragment : Fragment() {
     private lateinit var binding: ScrollingFragmentBinding
     private val sharedViewModel: ListShoesViewModel by activityViewModels()
     private fun execute(shoe: ShoeWithError, se: ShoeError, list: LinearLayoutCompat) = when (se) {
-        is ShoeError.CheckName -> {
+        is CheckName -> {
             addView(list).apply {
                 id = R.id.reservedShoeName
                 text = shoe.name
             }
         }
-        is ShoeError.CheckSize -> {
+        is CheckSize -> {
             addView(list).apply {
                 id = R.id.reservedShoeSize
                 text = shoe.size.toString()
             }
         }
-        is ShoeError.CheckCompany -> {
+        is CheckCompany -> {
             addView(list).apply {
                 id = R.id.reservedShoeCompany
                 text = shoe.company
             }
         }
-        is ShoeError.CheckDescription -> {
+        is CheckDescription -> {
             addView(list).apply {
                 id = R.id.reservedShoeDescription
                 text = shoe.description
@@ -72,8 +73,8 @@ class ScrollingFragment : Fragment() {
         sharedViewModel.shoeList.observe(viewLifecycleOwner, {  shoeList ->
             for (shoe in shoeList) {
                 val checkErrors: ShErr
-                (ShErr() + ShoeError.CheckName(shoe) + ShoeError.CheckSize(shoe) +
-                        ShoeError.CheckCompany(shoe) + ShoeError.CheckDescription(shoe)).also { checkErrors = it }
+                (ShErr() + CheckName(shoe) + CheckSize(shoe) + CheckCompany(shoe) +
+                        CheckDescription(shoe)).also { checkErrors = it }
                 runShoe(shoe, checkErrors, shoeRows)
             }
         })
