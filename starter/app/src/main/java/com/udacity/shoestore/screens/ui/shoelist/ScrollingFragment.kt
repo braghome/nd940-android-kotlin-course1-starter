@@ -25,28 +25,29 @@ import com.udacity.shoestore.screens.ui.shoelist.ScrollingFragmentDirections.Com
 class ScrollingFragment : Fragment() {
     private lateinit var viewModel: ScrollingFragmentViewModel
     private lateinit var binding: ScrollingFragmentBinding
+    private lateinit var shoeRows: LinearLayoutCompat
     private val sharedViewModel: ListShoesViewModel by activityViewModels()
-    private fun execute(shoe: ShoeWithError, se: ShoeError, list: LinearLayoutCompat) = when (se) {
+    private fun execute(shoe: ShoeWithError, se: ShoeError) = when (se) {
         is CheckName -> {
-            addView(list).apply {
+            addView().apply {
                 id = R.id.reservedShoeName
                 text = shoe.name
             }
         }
         is CheckSize -> {
-            addView(list).apply {
+            addView().apply {
                 id = R.id.reservedShoeSize
                 text = shoe.size.toString()
             }
         }
         is CheckCompany -> {
-            addView(list).apply {
+            addView().apply {
                 id = R.id.reservedShoeCompany
                 text = shoe.company
             }
         }
         is CheckDescription -> {
-            addView(list).apply {
+            addView().apply {
                 id = R.id.reservedShoeDescription
                 text = shoe.description
             }
@@ -59,23 +60,22 @@ class ScrollingFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View {
         binding = inflate(inflater, R.layout.scrolling_fragment, container, false)
+        ViewModelProvider(this).get(ScrollingFragmentViewModel::class.java).also {
+            viewModel = it }
+        this.also { binding.lifecycleOwner = it }
+        viewModel.also { binding.scrollingViewModel = it }
+        binding.shoeRows.also { shoeRows = it }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewModelProvider(this).get(ScrollingFragmentViewModel::class.java).also {
-            viewModel = it }
-        this.also { binding.lifecycleOwner = it }
-        viewModel.also { binding.scrollingViewModel = it }
-        val shoeRows: LinearLayoutCompat
-        binding.shoeRows.also { shoeRows = it }
-        sharedViewModel.shoeList.observe(viewLifecycleOwner, {  shoeList ->
+        sharedViewModel.shoeList.observe(viewLifecycleOwner, { shoeList ->
             for (shoe in shoeList) {
                 val checkErrors: ShErr
                 (ShErr() + CheckName(shoe) + CheckSize(shoe) + CheckCompany(shoe) +
                         CheckDescription(shoe)).also { checkErrors = it }
-                runShoe(shoe, checkErrors, shoeRows)
+                runShoe(shoe, checkErrors)
             }
         })
 
@@ -87,13 +87,13 @@ class ScrollingFragment : Fragment() {
         })
     }
 
-    private fun addView(shoeRows: LinearLayoutCompat): TextView {
-        val rowBinding: TextviewRowBinding
+    private fun addView(): TextView {
+        var rowBinding: TextviewRowBinding
         inflate(layoutInflater, shoeRows, true).also { rowBinding = it }
         return rowBinding.root
     }
-    private fun runShoe(shoeWithError: ShoeWithError, sheErr: ShErr,
-                        sRows: LinearLayoutCompat) {
-        sheErr.shErrOps.forEach { execute(shoeWithError, it, sRows) }
+
+    private fun runShoe(shoeWithError: ShoeWithError, sheErr: ShErr) {
+        sheErr.shErrOps.forEach { execute(shoeWithError, it) }
     }
 }
